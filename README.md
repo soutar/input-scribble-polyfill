@@ -1,7 +1,9 @@
 input-scribble-polyfill
 =======================
 
-A JS implementation of &lt;input type="scribble"> from HTML 3, built for the sake of it during/after Bruce Lawson's talk on standards at Scotch on the Rocks 2014, Edinburgh
+A JS implementation of &lt;input type="scribble"> from HTML 3 (released when I was in nappies), built for the sake of it during/after Bruce Lawson's talk on standards at Scotch on the Rocks 2014, Edinburgh
+
+[Check out the spec here](http://www.w3.org/MarkUp/html3/input.html)
 
 How to use
 ----------
