@@ -9,7 +9,7 @@ function ScribbleInput(inputElem) {
     src: $(inputElem).attr('src')
   };
   this.canvas = {};
-  this.lastXY = {x: null, y: null};
+  this.lastClick = {x: null, y: null};
 }
 
 ScribbleInput.prototype.init = function () {
@@ -46,9 +46,7 @@ ScribbleInput.prototype.init = function () {
   $(self.canvas.elem).on('mousedown', function (e) { self.startDrawing(e); });
   $(self.canvas.elem).on('mouseup', function (e) { self.stopDrawing(e); });
   $(self.canvas.elem).on('mouseout', function (e) { self.stopDrawing(e); });
-  $(self).closest('form').on('submit', function () {
-    self.writeVal();
-  });
+  $(self).closest('form').on('submit', self.writeVal);
 }
 
 ScribbleInput.prototype.startDrawing = function () {
@@ -62,10 +60,10 @@ ScribbleInput.prototype.startDrawing = function () {
 ScribbleInput.prototype.stopDrawing = function () {
  var self = this;
   
-  if (self.lastXY.x || self.lastXY.y) {
+  if (self.lastClick.x || self.lastClick.y) {
     $(this.canvas.elem).off('mousemove');
-    this.lastXY.x = null;
-    this.lastXY.y = null;
+    this.lastClick.x = null;
+    this.lastClick.y = null;
   }
   
   self.writeVal();
@@ -92,8 +90,8 @@ ScribbleInput.prototype.draw = function (e) {
    *
    * Move to the position of the last draw call
    */
-  if (self.lastXY.x || self.lastXY.y) {
-    self.ctx.moveTo(self.lastXY.x, self.lastXY.y);
+  if (self.lastClick.x || self.lastClick.y) {
+    self.ctx.moveTo(self.lastClick.x, self.lastClick.y);
   }
 
   self.ctx.lineTo(click.x, click.y);
@@ -103,16 +101,16 @@ ScribbleInput.prototype.draw = function (e) {
   self.ctx.stroke();
   self.ctx.closePath();
 
-  self.lastXY.x = click.x;
-  self.lastXY.y = click.y;
+  self.lastClick.x = click.x;
+  self.lastClick.y = click.y;
 }
 
-/* Iterate over inputs with our scribble attribute */
-$(function () {
-  var scribbles = $('input[data-interact="scribble"]');
+$.prototype.scribblify = function () {
+  var scribbleInput = new ScribbleInput(this);
+  scribbleInput.init();
+}
 
-  $(scribbles).each(function () {
-    var scribbleInput = new ScribbleInput(this);
-    scribbleInput.init();
-  });
+/* Scribblify our inputs */
+$('input[data-interact="scribble"]').each(function () {
+  $(this).scribblify();
 });
